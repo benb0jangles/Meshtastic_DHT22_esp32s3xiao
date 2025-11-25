@@ -1,0 +1,26 @@
+MESHTASTIC DHT22 FIRMWARE - PLACE COMPILED FIRMWARE HERE
+=========================================================
+
+This folder is for your compiled firmware files.
+
+After building the firmware with PlatformIO, copy the following files here:
+- firmware-seeed-xiao-s3.bin (main firmware binary)
+- Or the complete firmware .zip package
+
+Building Firmware:
+1. Open the meshtastic-firmware folder in VS Code with PlatformIO
+2. Run: pio run -e seeed-xiao-s3
+3. Find the compiled firmware in: .pio/build/seeed-xiao-s3/
+4. Copy the .bin file(s) to this folder
+
+Web Flasher Upload:
+1. Go to https://flasher.meshtastic.org/
+2. Select "Seeed XIAO S3"
+3. Click the folder icon or "Load local firmware"
+4. Select your firmware file from this folder
+5. Enable "Full Erase and Install"
+6. Click Flash
+
+Note: The firmware in the main meshtastic-firmware folder already has
+DHT22 support built in. You just need to compile it for the seeed-xiao-s3
+target.

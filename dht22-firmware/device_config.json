@@ -1,0 +1,15 @@
+{
+  "device_name": "DHT22Node",
+  "short_name": "DT22",
+  "region": "EU_868",
+  "modem_preset": "LONG_FAST",
+  "tx_power": 27,
+  "device_role": "CLIENT_MUTE",
+  "hop_limit": 7,
+  "telemetry_enabled": true,
+  "telemetry_interval": 300,
+  "bluetooth_enabled": true,
+  "wifi_enabled": false,
+  "wifi_ssid": "",
+  "wifi_password": ""
+}
