@@ -4,6 +4,9 @@
 
 Custom Meshtastic firmware with DHT22 temperature/humidity sensor support for the Seeed XIAO ESP32-S3 with Wio SX1262 LoRa module.
 
+![image1](https://github.com/benb0jangles/Meshtastic_DHT22_esp32s3xiao/blob/main/pics/2.jpg)
+
+
 ## Hardware Requirements
 
 - **Seeed XIAO ESP32-S3** board
