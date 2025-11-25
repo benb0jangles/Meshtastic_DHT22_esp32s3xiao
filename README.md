@@ -1,9 +1,8 @@
+![image1](https://github.com/benb0jangles/Meshtastic_DHT22_esp32s3xiao/blob/main/pics/1.jpg)
+
 # Meshtastic DHT22 Custom Firmware for XIAO ESP32-S3 + Wio SX1262
 
 Custom Meshtastic firmware with DHT22 temperature/humidity sensor support for the Seeed XIAO ESP32-S3 with Wio SX1262 LoRa module.
-
-![image1](https://github.com/benb0jangles/Meshtastic_DHT22_esp32s3xiao/blob/main/pics/1.jpg)
-
 
 ## Hardware Requirements
 
@@ -91,6 +90,84 @@ The GUI allows you to set:
 - Modem Preset
 - TX Power
 - Device Role
+- DHT22 Telemetry Settings
+- Bluetooth/WiFi Connectivity
+
+**New Pre-Install Configuration Features:**
+
+The GUI now supports creating reusable configurations for multiple devices:
+
+1. **Save as Pre-Install Config** - Export your configuration as a structured JSON file that can be:
+   - Loaded on any fresh device using the GUI
+   - Shared with other users
+   - Used as templates for different node types (router, sensor, mobile, etc.)
+
+2. **Export Setup Script** - Generate automated setup scripts that configure fresh devices with one command:
+   ```bash
+   # Windows
+   setup_meshtastic_device.bat COM3
+
+   # Linux/Mac
+   ./setup_meshtastic_device.sh /dev/ttyUSB0
+   ```
+
+   The script automatically:
+   - Tests device connection
+   - Applies all configuration settings
+   - Reboots the device
+   - Displays a configuration summary
+
+   Both `.sh` (Linux/Mac) and `.bat` (Windows) scripts are generated automatically.
+
+**Workflow for Multiple Devices:**
+
+1. Configure your desired settings in the GUI
+2. Click "Save as Pre-Install Config" to save a JSON template
+3. Click "Export Setup Script" to create executable scripts
+4. Flash fresh firmware to new devices
+5. Run the setup script on each device to apply identical configuration
+
+This is perfect for:
+- Setting up mesh networks with consistent configuration
+- Deploying multiple sensor nodes with identical settings
+- Quickly configuring replacement devices
+- Sharing standardized configurations with team members
+
+### Using Pre-Install Configurations
+
+If you have a pre-install configuration file or setup script:
+
+**Option A: Using the Setup Script (Fastest)**
+```bash
+# Windows
+setup_meshtastic_device.bat COM3
+
+# Linux/Mac
+chmod +x setup_meshtastic_device.sh
+./setup_meshtastic_device.sh /dev/ttyUSB0
+```
+
+The script will automatically:
+1. Test connection to the device
+2. Apply all configuration settings (name, region, modem, role, telemetry, etc.)
+3. Reboot the device
+4. Display a summary of applied settings
+
+**Option B: Using the GUI with a Pre-Install Config**
+1. Run `python meshtastic_config_gui.py`
+2. Click "Load Config"
+3. Select your `meshtastic_preinstall_config.json` file
+4. Click "Apply to Device" to send the configuration
+5. The device will reboot automatically
+
+**Example Pre-Install Config Files:**
+
+You can create different configuration templates for different node types:
+
+- `router_node_config.json` - Fixed router with WiFi enabled
+- `mobile_node_config.json` - CLIENT role with Bluetooth only
+- `sensor_node_config.json` - SENSOR role with aggressive power saving
+- `allotment_monitor_config.json` - DHT22 telemetry every 5 minutes
 
 ### Method 2: Post-Flash Configuration via CLI
 
@@ -206,6 +283,34 @@ After flashing and configuring:
    - Navigate to Device Metrics or Telemetry
    - You should see temperature and humidity values
 
+## Configuration GUI Features Reference
+
+The Python GUI (`meshtastic_config_gui.py`) provides the following features:
+
+### Configuration Management
+- **Save Config** - Save current settings to `device_config.json`
+- **Load Config** - Load settings from any JSON configuration file
+- **Reset to Defaults** - Restore default configuration values
+
+### Pre-Install Configuration Export
+- **Save as Pre-Install Config** - Export a structured JSON template for reuse
+- **Export Setup Script** - Generate executable bash (.sh) and batch (.bat) scripts
+
+### Device Operations
+- **Detect Ports** - Automatically find available COM/USB ports
+- **Test Connection** - Verify device is connected and responding
+- **Apply to Device** - Send configuration to connected device via USB
+- **Generate CLI Commands** - Preview meshtastic CLI commands
+- **Export Commands** - Save CLI commands as a script file
+
+### Configuration Sections in GUI
+1. **Device Identity** - Name and short name
+2. **LoRa Configuration** - Region, modem preset, TX power, hop limit
+3. **Device Role** - CLIENT, ROUTER, SENSOR, etc.
+4. **DHT22 Telemetry** - Enable/disable, update interval
+5. **Connectivity** - Bluetooth and WiFi settings
+6. **Device Connection** - COM port selection and testing
+
 ## Configuration Options Reference
 
 ### Regions (set lora.region)
@@ -291,19 +396,27 @@ meshtastic --port COM3 --factory-reset
 
 ```
 dht22-firmware/
-├── README.md                  # This file
-├── meshtastic_config_gui.py   # Python GUI configuration tool
-├── device_config.json         # Saved device configuration
+├── README.md                           # This file
+├── meshtastic_config_gui.py            # Python GUI configuration tool
+├── device_config.json                  # Saved device configuration (GUI)
+├── meshtastic_preinstall_config.json   # Pre-install config template (exported)
+├── setup_meshtastic_device.sh          # Automated setup script (Linux/Mac)
+├── setup_meshtastic_device.bat         # Automated setup script (Windows)
 ├── source/
-│   ├── DHT22Sensor.h          # DHT22 sensor header
-│   ├── DHT22Sensor.cpp        # DHT22 sensor implementation
-│   └── seeed_xiao_s3/         # Variant configuration
-│       ├── variant.h          # Pin definitions (inc. DHT22_PIN)
-│       ├── platformio.ini     # Build configuration
-│       └── pins_arduino.h     # Arduino pin mapping
-└── firmware/                  # Place compiled firmware here
+│   ├── DHT22Sensor.h                   # DHT22 sensor header
+│   ├── DHT22Sensor.cpp                 # DHT22 sensor implementation
+│   └── seeed_xiao_s3/                  # Variant configuration
+│       ├── variant.h                   # Pin definitions (inc. DHT22_PIN)
+│       ├── platformio.ini              # Build configuration
+│       └── pins_arduino.h              # Arduino pin mapping
+└── firmware/                           # Place compiled firmware here
     └── (firmware.bin)
 ```
+
+**Configuration Files:**
+- `device_config.json` - Working configuration saved by the GUI
+- `meshtastic_preinstall_config.json` - Exportable configuration template for fresh devices
+- `setup_meshtastic_device.sh/bat` - Executable scripts generated from your configuration
 
 ## Building Firmware with PlatformIO
 
@@ -563,3 +676,4 @@ The firmware size should be around 1.5-2MB for ESP32-S3.
 ## License
 
 This firmware modification follows the Meshtastic project's open-source license (GPL-3.0).
+
